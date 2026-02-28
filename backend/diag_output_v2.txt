@@ -1,0 +1,43 @@
+﻿node : (node:18548) 
+[DEP0040] 
+DeprecationWarning: 
+The `punycode` module 
+is deprecated. Please 
+use a userland 
+alternative instead.
+At line:1 char:1
++ node 
+diag_start_test_v2.js 
+2>&1 | Out-File 
+-FilePath 
+diag_output_v2.t ...
++ ~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~
+    + CategoryInfo    
+          : NotSpeci  
+  fied: ((node:1854   
+ 8) [D...native in    
+stead.:String) []    
+, RemoteException
+    + FullyQualifiedE 
+   rrorId : NativeCo  
+  mmandError
+ 
+(Use `node 
+--trace-deprecation 
+...` to show where 
+the warning was 
+created)
+--- DIAGNOSTIC START ---
+User: himanshugupta9330@gmail.com Target Exam: NEET
+Starting test for subject: Physics
+[DEBUG] No specific question found or loaded. Selecting random question for session: { exam: 'neet', subject: 'Physics', level: 1 }
+[DEBUG] AdaptiveEngine selecting question: {
+  exam: 'neet',
+  subject: 'Physics',
+  difficulty: 'easy',
+  attemptedCount: 0
+}
+[DEBUG] JSONLoader returned: neet_physics_002
+SUCCESS! Question ID: neet_physics_002
+--- DIAGNOSTIC END ---

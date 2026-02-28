@@ -1,0 +1,12 @@
+fastapi>=0.116.1
+uvicorn[standard]>=0.35.0
+pydantic>=2.11.0
+python-dotenv==1.0.0
+groq>=1.0.0
+redis==5.0.1
+httpx>=0.28.0
+python-multipart>=0.0.18
+youtube-transcript-api==0.6.1
+yt-dlp>=2023.10.13
+openai-whisper>=20231117
+torch>=2.0.0

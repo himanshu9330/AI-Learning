@@ -1,0 +1,12 @@
+{
+  "status": "fail",
+  "message": "Could not retrieve transcript: \nCould not retrieve a transcript for the video https://www.youtube.com/watch?v=aircAruvnKk! This is most likely caused by:\n\nSubtitles are disabled for this video\n\nIf you are sure that the described cause is not responsible for this error and that a transcript should be retrievable, please create an issue at https://github.com/jdepoix/youtube-transcript-api/issues. Please add which version of youtube_transcript_api you are using and provide the information needed to replicate the error. Also make sure that there are no open issues which already describe your problem!",
+  "errors": [],
+  "error": {
+    "statusCode": 404,
+    "status": "fail",
+    "isOperational": true,
+    "errors": []
+  },
+  "stack": "Error: Could not retrieve transcript: \nCould not retrieve a transcript for the video https://www.youtube.com/watch?v=aircAruvnKk! This is most likely caused by:\n\nSubtitles are disabled for this video\n\nIf you are sure that the described cause is not responsible for this error and that a transcript should be retrievable, please create an issue at https://github.com/jdepoix/youtube-transcript-api/issues. Please add which version of youtube_transcript_api you are using and provide the information needed to replicate the error. Also make sure that there are no open issues which already describe your problem!\n    at AIService.summarizeVideo (C:\\Users\\HP\\OneDrive\\Desktop\\AI-learning\\backend\\src\\services\\aiService.js:148:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async C:\\Users\\HP\\OneDrive\\Desktop\\AI-learning\\backend\\src\\controllers\\videoController.js:17:21"
+}
