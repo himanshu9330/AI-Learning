@@ -123,7 +123,49 @@ mongod
 npm run dev
 ```
 
-Backend will run on `http://localhost:5000`
+Backend will run on `http://localhost:5001` (default)
+
+### AI Service (ML) Setup
+
+1. **Install dependencies**
+```bash
+cd ai-service
+pip install -r requirements.txt
+```
+
+2. **Configure environment**
+```bash
+cp .env.example .env
+# Edit .env with your GROQ_API_KEY
+```
+
+3. **Run AI Service**
+```bash
+python -m app.main
+```
+
+AI Service will run on `http://localhost:8000`
+
+### Frontend Setup
+
+1. **Install dependencies**
+```bash
+cd frontend
+npm install
+```
+
+2. **Configure environment**
+```bash
+# Ensure .env.local has the correct NEXT_PUBLIC_API_URL
+# NEXT_PUBLIC_API_URL=http://localhost:5001/api/v1
+```
+
+3. **Run Frontend**
+```bash
+npm run dev
+```
+
+Frontend will be available at `http://localhost:3000`
 
 ### Environment Variables
 
