@@ -9,6 +9,7 @@ An intelligent adaptive learning system that dynamically adjusts question diffic
 - **Adaptive Testing**: Real-time difficulty adjustment based on student performance
 - **Topic Mastery Tracking**: Automatic calculation and classification of topic proficiency
 - **Ability Score System**: 0-1 scale tracking student capability
+- **Smart Timetable**: AI-powered daily study schedules with persistence
 - **Weekly Roadmaps**: AI-generated personalized study plans
 - **Analytics Dashboard**: Comprehensive performance tracking and insights
 - **Smart Question Selection**: ±0.05 difficulty range with gradual expansion
@@ -32,7 +33,7 @@ An intelligent adaptive learning system that dynamically adjusts question diffic
 - **Framework**: Next.js 14
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS & Framer Motion
-- **Features**: Interactive Dashboard, Heatmap, Ability Meter, Adaptive Test Interface
+- **Features**: Interactive Dashboard (Heatmap, Ability Meter, Timetable Widget), Adaptive Test Interface
 
 ## 🏗️ Project Structure
 
@@ -40,7 +41,7 @@ An intelligent adaptive learning system that dynamically adjusts question diffic
 AI-learning/
 ├── backend/                 # Express.js API (✅ COMPLETE)
 │   ├── src/
-│   │   ├── models/         # 5 Mongoose models
+│   │   ├── models/         # 6 Mongoose models
 │   │   ├── services/       # Business logic
 │   │   ├── controllers/    # HTTP handlers
 │   │   ├── routes/         # API routes
@@ -85,10 +86,11 @@ AI-learning/
 - `GET /api/v1/analytics/performance` - Performance stats
 - `GET /api/v1/analytics/improvement` - Improvement metrics
 
-### Roadmap
+### Roadmap & Timetable
 - `GET /api/v1/roadmap/generate` - Generate weekly plan
-- `GET /api/v1/roadmap/mastery` - Topic mastery summary
-- `GET /api/v1/roadmap/focus-topics` - Recommended topics
+- `GET /api/v1/roadmap/latest` - Get latest roadmap
+- `POST /api/v1/timetable/generate` - Generate daily smart timetable
+- `GET /api/v1/timetable/current` - Fetch user's active timetable
 
 ## 🚀 Getting Started
 
@@ -164,6 +166,11 @@ CORS_ORIGIN=http://localhost:3000
 - Mastery score (0-1)
 - Classification (weak/moderate/strong)
 - Attempts tracking
+
+### Timetable
+- User reference
+- Schedule array (start, end, task, type)
+- Overwrites existing user timetable
 
 ## 🧠 Adaptive Algorithm
 
@@ -247,6 +254,19 @@ Authorization: Bearer <token>
 GET /api/v1/roadmap/generate
 Authorization: Bearer <token>
 // Returns: { week_plan: [...], summary }
+
+### 5. Generate Smart Timetable
+```javascript
+POST /api/v1/timetable/generate
+Authorization: Bearer <token>
+{
+  "subjects": ["Physics", "Chemistry"],
+  "wakeTime": "07:00",
+  "sleepTime": "23:00",
+  "mealTimes": "08:00, 13:00, 20:00"
+}
+// Returns: { success: true, data: [...] }
+```
 ```
 
 ## 🔐 Security Features
