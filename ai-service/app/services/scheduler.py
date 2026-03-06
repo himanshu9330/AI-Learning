@@ -39,70 +39,68 @@ class SchedulerService:
                     raise Exception(f"LLM call failed after {settings.MAX_RETRIES} attempts: {e}")
 
     def generate_timetable(self, request: TimetableRequest) -> TimetableResponse:
-        """Generate a personalized adaptive timetable"""
+        """Generate a personalized adaptive weekly timetable"""
         subjects_str = ", ".join(request.subjects)
         
-        prompt = f"""
-You are an expert personalized time management coach and learning designer.
-Your goal is to build a highly realistic, conflict-free, 1-day study timetable for a student.
+        prompt = f"""You are an expert personalized time management coach.
+Build a realistic, conflict-free, FULL 7-DAY weekly study timetable (Mon-Sun).
 
-Student Constraints:
+Student Info:
 - Profile: {request.profile}
-- Wake Time: {request.wake_time}
-- Sleep Time: {request.sleep_time}
-- Meal Times: {request.meal_times}
-- External Coaching/Commitments: {request.coaching_time}
-- Hobbies/Extras: {request.extras}
-- Subjects to Study: {subjects_str}
+- Wake/Sleep: {request.wake_time} to {request.sleep_time}
+- Meals: {request.meal_times}
+- Coaching: {request.coaching_time}
+- Extras: {request.extras}
+- Subjects: {subjects_str}
 
-CRITICAL RULES YOU MUST FOLLOW to ensure a concise output:
-1. EQUAL DISTRIBUTION: Time MUST be divided equally among all provided subjects ({subjects_str}).
-2. LARGER BLOCKS: Use 1 to 2 hour blocks for study/practice to save JSON generation length. Do NOT create tiny 15-minute segments for every break. Combines breaks into larger chunks.
-3. COMPREHENSIVE STRUCTURE: For EACH subject, you must ensure there is time scheduled for "study", "practice", and "test".
-4. NO OVERLAP: Ensure strict chronological order. Keep descriptions short and simple to save text length. Format times as "HH:MM AM/PM".
+RULES:
+1. COACHING: Parse '{request.coaching_time}'. Place 'fixed' items ONLY on specific days mentioned (e.g. 'Monday'). If no day, apply daily.
+2. VARIATION: Weekdays focus on study/practice. Weekends focus on test/revision.
+3. BLOCKS: Use 1-2 hour blocks for study. Keep task names VERY SHORT.
+4. EQUAL TIME: Divide study hours equally among {subjects_str}.
+5. FORMAT: JSON ONLY.
 
-Output the schedule as a JSON object with this exact structure:
+JSON Schema:
 {{
-  "schedule": [
-    {{
-      "start": "07:00 AM",
-      "end": "07:30 AM",
-      "task": "Wake up and Morning Routine",
-      "type": "fixed"
-    }},
-    {{
-      "start": "07:30 AM",
-      "end": "09:00 AM",
-      "task": "Physics Concept Revision",
-      "type": "study",
-      "subject": "Physics"
-    }}
-  ]
+  "weekly_schedule": {{
+    "Monday": [
+      {{ "start": "07:00 AM", "end": "08:30 AM", "task": "Subject Study", "type": "study", "subject": "SubjectName" }}
+    ],
+    "Tuesday": [], 
+    "Wednesday": [], 
+    "Thursday": [], 
+    "Friday": [], 
+    "Saturday": [], 
+    "Sunday": []
+  }}
 }}
 
-"type" must strictly be one of: "study", "practice", "test", "fixed", "break", "extra".
-"subject" is optional and should only be included if the type is study, practice, or test.
+"type" enum: "study", "practice", "test", "fixed", "break", "extra".
 
-IMPORTANT: Return ONLY valid JSON. No markdown formatting, no code blocks, no trailing text.
-"""
+IMPORTANT: RETURN ONLY VALID JSON. NO CONVERSATION. NO MARKDOWN."""
         
         response_text = self._call_llm(prompt)
         
         try:
+            # Robust JSON extraction
             cleaned = response_text.strip()
-            if cleaned.startswith("```json"):
-                cleaned = cleaned[7:]
-            if cleaned.startswith("```"):
-                cleaned = cleaned[3:]
-            if cleaned.endswith("```"):
-                cleaned = cleaned[:-3]
+            if "```" in cleaned:
+                cleaned = cleaned.split("```")[1]
+                if cleaned.startswith("json"):
+                    cleaned = cleaned[4:]
             cleaned = cleaned.strip()
+            
+            # Find the first { and last }
+            start = cleaned.find("{")
+            end = cleaned.rfind("}")
+            if start != -1 and end != -1:
+                cleaned = cleaned[start:end+1]
             
             response_data = json.loads(cleaned)
             return TimetableResponse(**response_data)
         except Exception as e:
-            print(f"Failed to parse timetable JSON: {e}")
-            print(f"Raw Output: {response_text}")
-            raise Exception("LLM failed to generate a structured timetable. Please try again.")
+            print(f"Failed to parse timetable JSON: {str(e)}")
+            print(f"Full Raw Output for debugging:\n{response_text}")
+            raise Exception(f"AI Generation failed to produce valid JSON: {str(e)}")
 
 scheduler_service = SchedulerService()

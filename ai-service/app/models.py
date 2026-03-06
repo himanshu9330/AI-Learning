@@ -115,7 +115,7 @@ class TimetableScheduleItem(BaseModel):
     subject: Optional[str] = None
 
 class TimetableResponse(BaseModel):
-    schedule: List[TimetableScheduleItem]
+    weekly_schedule: Dict[str, List[TimetableScheduleItem]]
 
 class TimetableRequest(BaseModel):
     subjects: List[str]

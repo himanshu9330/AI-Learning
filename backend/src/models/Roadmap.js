@@ -69,7 +69,16 @@ const roadmapSchema = new mongoose.Schema(
             total_practice_questions: { type: Number, default: 0 },
             total_study_hours: { type: Number, default: 0 },
             goal: String
-        }
+        },
+        revision_schedule: [
+            {
+                chapter: { type: String, required: true },
+                subject: { type: String, required: true },
+                next_revision_date: { type: Date, required: true },
+                interval_days: { type: Number, default: 3 },
+                completed_count: { type: Number, default: 0 }
+            }
+        ]
     },
     {
         timestamps: true

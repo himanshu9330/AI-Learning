@@ -191,7 +191,7 @@ class AIService {
                     extras: data.extras
                 },
                 {
-                    timeout: 30000, // 30 seconds for complex reasoning
+                    timeout: 90000, // 90 seconds for full 7-day schedule generation
                     headers: {
                         'Content-Type': 'application/json'
                     }

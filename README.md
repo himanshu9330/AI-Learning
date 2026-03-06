@@ -9,9 +9,9 @@ An intelligent adaptive learning system that dynamically adjusts question diffic
 - **Adaptive Testing**: Real-time difficulty adjustment based on student performance
 - **Topic Mastery Tracking**: Automatic calculation and classification of topic proficiency
 - **Ability Score System**: 0-1 scale tracking student capability
-- **Smart Timetable**: AI-powered daily study schedules with persistence
-- **Weekly Roadmaps**: AI-generated personalized study plans
-- **Analytics Dashboard**: Comprehensive performance tracking and insights
+- **Smart Timetable**: AI-powered daily study schedules with deterministic fallback
+- **Weekly Roadmaps**: AI-generated personalized study plans with multi-subject recovery
+- **Analytics Dashboard**: Comprehensive performance tracking (Accuracy, Mastery Heatmap, Ability Score)
 - **Smart Question Selection**: ±0.05 difficulty range with gradual expansion
 
 ## 📦 Tech Stack
@@ -123,7 +123,7 @@ mongod
 npm run dev
 ```
 
-Backend will run on `http://localhost:5001` (default)
+Backend will run on `http://localhost:5005` (default)
 
 ### AI Service (ML) Setup
 
@@ -157,7 +157,7 @@ npm install
 2. **Configure environment**
 ```bash
 # Ensure .env.local has the correct NEXT_PUBLIC_API_URL
-# NEXT_PUBLIC_API_URL=http://localhost:5001/api/v1
+# NEXT_PUBLIC_API_URL=http://localhost:5005/api/v1
 ```
 
 3. **Run Frontend**
@@ -171,7 +171,7 @@ Frontend will be available at `http://localhost:3000`
 
 ```env
 NODE_ENV=development
-PORT=5000
+PORT=5005
 MONGODB_URI=mongodb://localhost:27017/adaptive_learning
 JWT_SECRET=your_secret_key
 JWT_EXPIRE=7d

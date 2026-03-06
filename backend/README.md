@@ -83,7 +83,7 @@ npm run dev
 npm start
 ```
 
-The server will start on `http://localhost:5000`
+The server will start on `http://localhost:5005`
 
 ## 📡 API Endpoints
 
@@ -142,7 +142,7 @@ Authorization: Bearer <your-jwt-token>
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `NODE_ENV` | Environment mode | development |
-| `PORT` | Server port | 5000 |
+| `PORT` | Server port | 5005 |
 | `MONGODB_URI` | MongoDB connection string | mongodb://localhost:27017/myapp_db |
 | `JWT_SECRET` | JWT secret key | - |
 | `JWT_EXPIRE` | JWT expiration time | 7d |

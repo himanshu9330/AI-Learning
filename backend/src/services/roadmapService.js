@@ -40,17 +40,54 @@ class RoadmapService {
             return avgAcc < 0.8;
         }).map(t => t.topic);
 
-        // 6. Use AI to generate the full 7-day roadmap
-        const aiResponse = await aiService.generateRoadmap({
-            topics: topicPerformance,
-            subject: session.subject
-        });
+        // 5b. Fetch other weak topics from global mastery (multi-subject support)
+        const otherWeakMastery = await TopicMastery.find({
+            user_id: session.user_id,
+            mastery_percentage: { $lt: 80 }
+        }).sort({ mastery_percentage: 1 }).limit(5);
+
+        const otherWeakTopics = otherWeakMastery
+            .filter(m => !topicPerformance.some(tp => tp.topic === m.topic))
+            .map(m => ({
+                topic: m.topic,
+                easy_accuracy: m.mastery_percentage / 100, // Approximate
+                medium_accuracy: null,
+                hard_accuracy: null,
+                is_from_history: true
+            }));
+
+        const mergedTopics = [...topicPerformance, ...otherWeakTopics];
+
+        // 6. Use AI to generate the full 7-day roadmap with fallback
+        let aiResponse;
+        try {
+            aiResponse = await aiService.generateRoadmap({
+                topics: mergedTopics,
+                subject: mergedTopics.length > topicPerformance.length ? "General (Multi-subject)" : session.subject
+            });
+        } catch (error) {
+            console.error('AI Roadmap generation failed, using fallback logic:', error.message);
+
+            // Fallback: Use internal logic if AI fails
+            const weights = this._getDynamicWeights(terminationLevel, performance);
+            const weakTopicsForFallback = mergedTopics.map(t => t.topic);
+
+            aiResponse = {
+                week_plan: this._generateWeekPlan(weakTopicsForFallback, weights, session.subject),
+                summary: await this._generateSummary(
+                    session.user_id,
+                    weakTopicsForFallback,
+                    mergedTopics.map(t => ({ topic: t.topic, priority_score: 0.8 })), // Mock priority
+                    session.subject
+                )
+            };
+        }
 
         // Store roadmap in DB
         const roadmap = await ProjectRoadmap.create({
             user_id: session.user_id,
             test_session_id: testSessionId,
-            subject: session.subject,
+            subject: mergedTopics.length > topicPerformance.length ? "General (Multi-subject)" : session.subject,
             terminationLevel: terminationLevel,
             weak_topics: weakTopicsList.length > 0 ? weakTopicsList : topicPerformance.map(t => t.topic),
             week_plan: aiResponse.week_plan,

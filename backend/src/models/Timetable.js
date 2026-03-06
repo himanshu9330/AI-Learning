@@ -8,19 +8,22 @@ const timetableSchema = new mongoose.Schema(
             required: true,
             index: true
         },
-        schedule: [
-            {
-                start: { type: String, required: true },
-                end: { type: String, required: true },
-                task: { type: String, required: true },
-                type: {
-                    type: String,
-                    enum: ['study', 'practice', 'test', 'fixed', 'break', 'extra'],
-                    required: true
-                },
-                subject: { type: String }
-            }
-        ]
+        weeklySchedule: {
+            type: Map,
+            of: [
+                {
+                    start: { type: String, required: true },
+                    end: { type: String, required: true },
+                    task: { type: String, required: true },
+                    type: {
+                        type: String,
+                        enum: ['study', 'practice', 'test', 'fixed', 'break', 'extra'],
+                        required: true
+                    },
+                    subject: { type: String }
+                }
+            ]
+        }
     },
     {
         timestamps: true

@@ -27,7 +27,7 @@ cp .env.example .env
 Edit `.env`:
 ```env
 NODE_ENV=development
-PORT=5000
+PORT=5005
 MONGODB_URI=mongodb://localhost:27017/adaptive_learning
 JWT_SECRET=your_secret_key_here
 AI_SERVICE_URL=http://localhost:8000
@@ -38,7 +38,7 @@ AI_SERVICE_URL=http://localhost:8000
 npm run dev
 ```
 
-Backend runs on `http://localhost:5000`
+Backend runs on `http://localhost:5005`
 
 ---
 
@@ -96,7 +96,7 @@ redis-server
 
 ### 1. Test Backend Health
 ```bash
-curl http://localhost:5000/api/v1/
+curl http://localhost:5005/api/v1/
 ```
 
 ### 2. Test AI Service
@@ -106,7 +106,7 @@ curl http://localhost:8000/health
 
 ### 3. Register a User
 ```bash
-POST http://localhost:5000/api/v1/auth/register
+POST http://localhost:5005/api/v1/auth/register
 {
   "name": "Test User",
   "email": "test@example.com",
@@ -118,7 +118,7 @@ POST http://localhost:5000/api/v1/auth/register
 
 ### 4. Start Adaptive Test
 ```bash
-POST http://localhost:5000/api/v1/test/start
+POST http://localhost:5005/api/v1/test/start
 Authorization: Bearer <your_token>
 {
   "subject": "Mathematics"
@@ -127,7 +127,7 @@ Authorization: Bearer <your_token>
 
 ### 5. Get AI Explanation
 ```bash
-POST http://localhost:5000/api/v1/ai/explain
+POST http://localhost:5005/api/v1/ai/explain
 Authorization: Bearer <your_token>
 {
   "question_id": "Q001",
@@ -160,7 +160,7 @@ AI-learning/
 │   │   └── models.py         # Pydantic models
 │   └── requirements.txt
 │
-└── frontend/                  # Next.js (TODO)
+└── frontend/                  # Next.js Dashboard & Test UI
     └── ...
 ```
 
@@ -171,7 +171,7 @@ AI-learning/
 ### Backend (.env)
 ```env
 NODE_ENV=development
-PORT=5000
+PORT=5005
 API_VERSION=v1
 
 MONGODB_URI=mongodb://localhost:27017/adaptive_learning
@@ -294,6 +294,6 @@ CACHE_TTL=86400
 
 **Backend**: ✅ Production Ready  
 **AI Service**: ✅ Production Ready  
-**Frontend**: ⏳ Pending
+**Frontend**: ✅ Production Ready
 
 The adaptive learning engine is fully functional!

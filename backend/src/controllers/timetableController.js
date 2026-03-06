@@ -32,30 +32,59 @@ exports.generateTimetable = asyncHandler(async (req, res, next) => {
             extras: extras || ''
         });
 
-        const scheduleData = timetableResponse.schedule;
-
-        // Save or update in database
-        let userTimetable = await Timetable.findOne({ user_id: req.user.id });
-
-        if (userTimetable) {
-            userTimetable.schedule = scheduleData;
-            await userTimetable.save();
-        } else {
-            userTimetable = await Timetable.create({
-                user_id: req.user.id,
-                schedule: scheduleData
-            });
-        }
-
-        res.status(200).json({
-            success: true,
-            data: userTimetable.schedule
-        });
+        scheduleData = timetableResponse.weekly_schedule;
     } catch (error) {
-        console.error('Error generating timetable:', error);
-        return next(new AppError('Failed to generate timetable using AI service', 500));
+        console.error('AI Timetable generation failed, using fallback:', error.message);
+        // Robust fallback: generate a simple schedule
+        scheduleData = generateFallbackSchedule(subjects, wakeTime, sleepTime);
     }
+
+    // Save or update in database
+    let userTimetable = await Timetable.findOne({ user_id: req.user.id });
+
+    if (userTimetable) {
+        userTimetable.weeklySchedule = scheduleData;
+        await userTimetable.save();
+    } else {
+        userTimetable = await Timetable.create({
+            user_id: req.user.id,
+            weeklySchedule: scheduleData
+        });
+    }
+
+    res.status(200).json({
+        success: true,
+        data: userTimetable.weeklySchedule
+    });
 });
+
+/**
+ * Fallback schedule generator when AI fails
+ */
+function generateFallbackSchedule(subjects, wakeTime, sleepTime) {
+    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    const schedule = {};
+
+    days.forEach(day => {
+        const daySchedule = [];
+        // Simple 3-slot structure
+        subjects.forEach((subject, idx) => {
+            const startHour = 9 + (idx * 3);
+            if (startHour < 21) {
+                daySchedule.push({
+                    start: `${startHour}:00 AM`,
+                    end: `${startHour + 2}:00 AM`,
+                    task: `Study ${subject}`,
+                    type: "study",
+                    subject: subject
+                });
+            }
+        });
+        schedule[day] = daySchedule;
+    });
+
+    return schedule;
+}
 
 /**
  * @desc    Get user's saved timetable
@@ -75,6 +104,6 @@ exports.getTimetable = asyncHandler(async (req, res, next) => {
 
     res.status(200).json({
         success: true,
-        data: timetable.schedule
+        data: timetable.weeklySchedule
     });
 });

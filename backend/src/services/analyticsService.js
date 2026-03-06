@@ -85,7 +85,7 @@ class AnalyticsService {
                 $group: {
                     _id: null,
                     avgScore: { $avg: '$final_score' },
-                    avgAccuracy: { $avg: '$accuracy' },
+                    avgAccuracy: { $avg: '$final_score' },
                     totalQuestions: { $sum: '$questions_attempted' },
                     totalCorrect: { $sum: '$correct_answers' }
                 }
